@@ -3,7 +3,8 @@
 # ==========================================
 
 # Importa o Flask para criar nossa aplicação web
-from flask import Flask
+# e o render_template para carregar arquivos HTML
+from flask import Flask, render_template
 
 # ==========================================
 # CRIAÇÃO DA APLICAÇÃO
@@ -19,9 +20,33 @@ app = Flask(__name__)
 # Define a rota "/" (página inicial)
 @app.route("/")
 def home():
-    # Retorna uma mensagem simples para testar
-    # se o servidor Flask está funcionando
-    return"StudyRoom funcionando!📚"
+
+    # Renderiza o arquivo index.html localizado
+    # dentro da pasta templates
+    return render_template("index.html")
+
+# ==========================================
+# ROTA DE LOGIN
+# ==========================================
+
+# Define a rota "/login"
+@app.route("/login")
+def login():
+
+    # Carrega a página login.html
+    return render_template("login.html")
+
+# ==========================================
+# ROTA DE CADASTRO
+# ==========================================
+
+# Define a rota "/cadastro"
+@app.route("/cadastro")
+def cadastro():
+
+    #Carrega a página cadastro.html
+    return render_template("cadastro.html")
+
 
 # ==========================================
 # EXECUÇÃO DA APLICAÇÃO

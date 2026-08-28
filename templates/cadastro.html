@@ -1,0 +1,181 @@
+<!-- ==========================================
+     STUDYROOM - PÁGINA DE CADASTRO
+========================================== -->
+
+<!DOCTYPE html>
+
+<!-- Define o idioma da página -->
+<html lang="pt-BR">
+
+<head>
+
+    <!-- ==========================================
+         CONFIGURAÇÕES DA PÁGINA
+    =========================================== -->
+
+    <!-- Permite caracteres especiais -->
+    <meta charset="UTF-8">
+
+    <!-- Responsividade -->
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <!-- Título da página -->
+    <title>Criar conta | StudyRoom</title>
+
+
+    <!-- ==========================================
+         ARQUIVO CSS
+    =========================================== -->
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+    <!-- ==========================================
+         ÁREA PRINCIPAL DO CADASTRO
+    =========================================== -->
+
+    <main class="auth-container">
+
+        <!-- ==========================================
+             CARD DE CADASTRO
+        =========================================== -->
+
+        <section class="auth-card">
+
+            <!-- Logo -->
+            <div class="auth-logo">
+                StudyRoom 📚
+            </div>
+
+
+            <!-- Título -->
+            <h1>
+                Criar sua conta
+            </h1>
+
+
+            <!-- Descrição -->
+            <p class="auth-description">
+                Crie sua conta e comece a estudar com outras pessoas.
+            </p>
+
+
+            <!-- ==========================================
+                 FORMULÁRIO DE CADASTRO
+            =========================================== -->
+
+            <form>
+
+                <!-- Nome -->
+                <div class="form-group">
+
+                    <label for="nome">
+                        Nome
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        placeholder="Digite seu nome"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- E-mail -->
+                <div class="form-group">
+
+                    <label for="email">
+                        E-mail
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Digite seu e-mail"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Senha -->
+                <div class="form-group">
+
+                    <label for="senha">
+                        Senha
+                    </label>
+
+                    <input
+                        type="password"
+                        id="senha"
+                        name="senha"
+                        placeholder="Crie uma senha"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Confirmar senha -->
+                <div class="form-group">
+
+                    <label for="confirmar_senha">
+                        Confirmar senha
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirmar_senha"
+                        name="confirmar_senha"
+                        placeholder="Digite a senha novamente"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- ==========================================
+                     BOTÃO DE CADASTRO
+                =========================================== -->
+
+                <button
+                    type="submit"
+                    class="auth-button">
+
+                    Criar conta
+
+                </button>
+
+            </form>
+
+
+            <!-- ==========================================
+                 LINK PARA LOGIN
+            =========================================== -->
+
+            <p class="auth-footer">
+
+                Já possui uma conta?
+
+                <a href="{{ url_for('login') }}">
+                    Entrar
+                </a>
+
+            </p>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>
