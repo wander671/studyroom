@@ -2,9 +2,12 @@
 # STUDYROOM - ARQUIVO PRINCIPAL
 # ==========================================
 
-# Importa o Flask para criar nossa aplicação web
-# e o render_template para carregar arquivos HTML
+# Importa o Flask para criar nossa aplicação web,
+# o render_template para carregar arquivos HTML
+# e a função conectar_banco para conectar
+# nossa aplicação ao PostgreSQL.
 from flask import Flask, render_template
+from database import conectar_banco
 
 # ==========================================
 # CRIAÇÃO DA APLICAÇÃO
@@ -46,6 +49,19 @@ def cadastro():
 
     #Carrega a página cadastro.html
     return render_template("cadastro.html")
+
+# ==========================================
+# ROTA DE TESTE DO BANCO DE DADOS
+# ==========================================
+@app.route("/teste-banco")
+def teste_banco():
+    # Tenta estabelecer uma conexão com o PostgreSQL
+    conexao = conectar_banco()
+    # Fecha a conexão após o teste
+    conexao.close()
+    # Retorna uma mensagem informando que a conexão funcionou
+    return "StudyRoom conectado ao PostgreSQL! 🐘"
+
 
 
 # ==========================================
