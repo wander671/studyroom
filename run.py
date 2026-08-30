@@ -55,13 +55,17 @@ def cadastro():
 # ==========================================
 @app.route("/teste-banco")
 def teste_banco():
-    # Tenta estabelecer uma conexão com o PostgreSQL
-    conexao = conectar_banco()
-    # Fecha a conexão após o teste
-    conexao.close()
-    # Retorna uma mensagem informando que a conexão funcionou
-    return "StudyRoom conectado ao PostgreSQL! 🐘"
-
+    try:
+        # Tenta estabelecer uma conexão com o PostgreSQL
+        conexao = conectar_banco()
+        # Fecha a conexão após o teste
+        conexao.close()
+        # Retorna uma mensagem informando que a conexão funcionou
+        return "StudyRoom conectado ao PostgreSQL! 🐘"
+    except Exception as erro:
+        # Captura qualquer erro na conexão com o banco
+        print(f"Erro ao conectar ao PostgreSQL: {erro}")
+        return "Erro ao conectar ao PostgreSQL.", 500
 
 
 # ==========================================

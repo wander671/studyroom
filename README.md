@@ -125,6 +125,54 @@ StudyRoom conectado ao PostgreSQL! 📚🐘
 
 ---
 
+## 🌐 Integração Flask → PostgreSQL
+
+A conexão com o PostgreSQL foi integrada à aplicação Flask.
+
+A rota:
+
+```text
+/teste-banco
+```
+
+é utilizada para validar a comunicação entre o Flask e o banco de dados PostgreSQL.
+
+Fluxo da aplicação:
+
+```text
+Navegador
+   │
+   ▼
+Flask
+   │
+   ▼
+/teste-banco
+   │
+   ▼
+conectar_banco()
+   │
+   ▼
+database.py
+   │
+   ▼
+Psycopg
+   │
+   ▼
+PostgreSQL 18
+```
+
+Quando a conexão é realizada com sucesso, a aplicação retorna:
+
+```text
+StudyRoom conectado ao PostgreSQL! 🐘
+```
+
+A rota também possui **tratamento de erros**, utilizando `try/except`, permitindo identificar falhas na conexão e retornar uma resposta HTTP `500` quando ocorre um erro interno.
+
+Essa etapa confirma a integração entre o **Flask**, o módulo `database.py` e o **PostgreSQL**.
+
+---
+
 ## 🏗️ Arquitetura
 
 A aplicação será construída utilizando uma arquitetura organizada, separando responsabilidades entre backend, frontend, banco de dados e comunicação em tempo real.
@@ -185,7 +233,7 @@ Sala de Estudos Virtual/
 
 ## 📌 Status do projeto
 
-### Fase atual — Integração com PostgreSQL
+### Fase atual — Integração Flask + PostgreSQL
 
 * [x] Planejamento do projeto
 * [x] Definição da arquitetura inicial
@@ -205,7 +253,9 @@ Sala de Estudos Virtual/
 * [x] Proteção do `.env` através do `.gitignore`
 * [x] Criação do `database.py`
 * [x] Teste de conexão Python → PostgreSQL
-* [ ] Integração do banco com o Flask
+* [x] Integração do banco com o Flask
+* [x] Criação da rota `/teste-banco`
+* [x] Tratamento de erros na conexão com o banco
 * [ ] Sistema de cadastro
 * [ ] Sistema de login
 * [ ] Sistema de salas
@@ -221,15 +271,15 @@ Sala de Estudos Virtual/
 
 ## 🎯 Próximos passos
 
-O próximo objetivo será integrar a conexão PostgreSQL ao Flask.
+Com a integração entre **Flask e PostgreSQL concluída**, o próximo objetivo será desenvolver o **sistema de cadastro de usuários**.
 
-A partir dessa etapa, o StudyRoom começará a trabalhar com dados reais através da aplicação:
+A aplicação seguirá o fluxo:
 
 ```text
 Usuário
    │
    ▼
-Formulário
+Formulário de Cadastro
    │
    ▼
 Flask
@@ -244,7 +294,20 @@ PostgreSQL
 usuarios
 ```
 
-O primeiro recurso será a criação do **sistema de cadastro de usuários**, seguido pelo sistema de login e autenticação.
+O sistema deverá permitir o cadastro de novos usuários no banco de dados `studyroom_db`.
+
+Após o cadastro, serão desenvolvidos:
+
+1. 🔐 Sistema de login
+2. 🔒 Autenticação e segurança
+3. 🏠 Sistema de salas virtuais
+4. 💬 Chat em tempo real
+5. 🧑‍💻 Sistema de personagens
+6. 🎵 Player de música
+7. ⏱️ Pomodoro
+8. 📊 Registro das sessões de estudo
+9. 🧪 Testes
+10. ☁️ Deploy
 
 ---
 
@@ -259,3 +322,4 @@ Projeto desenvolvido para estudos, evolução profissional e construção de por
 ⭐ **StudyRoom está em desenvolvimento.**
 
 Novas funcionalidades serão adicionadas durante as próximas etapas do projeto.
+
