@@ -256,6 +256,9 @@ Sala de Estudos Virtual/
 * [x] Integração do banco com o Flask
 * [x] Criação da rota `/teste-banco`
 * [x] Tratamento de erros na conexão com o banco
+* [x] Criação do formulário de cadastro (HTML)
+* [x] Rota `/cadastro` configurada para aceitar GET e POST
+* [x] Captura dos dados do formulário com `request.form`
 * [ ] Sistema de cadastro
 * [ ] Sistema de login
 * [ ] Sistema de salas
@@ -271,7 +274,14 @@ Sala de Estudos Virtual/
 
 ## 🎯 Próximos passos
 
-Com a integração entre **Flask e PostgreSQL concluída**, o próximo objetivo será desenvolver o **sistema de cadastro de usuários**.
+## 🎯 Próximos passos
+
+O formulário de cadastro já está funcional e capturando os dados 
+(`nome`, `email`, `senha`, `confirmar_senha`) via requisição POST.
+
+O próximo passo é validar se a senha e a confirmação de senha são 
+iguais, aplicar hash na senha com `werkzeug.security`, e então 
+salvar o novo usuário no banco de dados `studyroom_db`.
 
 A aplicação seguirá o fluxo:
 
