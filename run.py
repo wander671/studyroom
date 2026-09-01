@@ -6,7 +6,9 @@
 # o render_template para carregar arquivos HTML
 # e a função conectar_banco para conectar
 # nossa aplicação ao PostgreSQL.
-from flask import Flask, render_template
+# O "request" é o objeto que guarda os dados
+# enviados pelo formulário (POST) ou pela URL (GET)
+from flask import Flask, render_template, request
 from database import conectar_banco
 
 # ==========================================
@@ -44,8 +46,25 @@ def login():
 # ==========================================
 
 # Define a rota "/cadastro"
-@app.route("/cadastro")
+@app.route("/cadastro", methods=["GET", "POST"])
 def cadastro():
+
+    # Verifica qual foi o método usado na requisição
+    if request.method == "POST":
+        # request.form["nome_do_campo"] busca o valor
+        # digitado pelo usuário, usando o "name" do input
+        # como se fosse uma chave de dicionário
+        nome = request.form["nome"]
+        email = request.form["email"]
+        senha = request.form["senha"]
+        confirmar_senha = request.form["confirmar_senha"]
+        # Por enquanto, vamos só imprimir no terminal
+        # pra confirmar que está pegando certinho
+        print(f"Nome: {nome}")
+        print(f"Email: {email}")
+        print(f"Senha: {senha}")
+        print(f"Confirmar senha: {confirmar_senha}")
+        pass
 
     #Carrega a página cadastro.html
     return render_template("cadastro.html")
