@@ -8,8 +8,17 @@
 # nossa aplicação ao PostgreSQL.
 # O "request" é o objeto que guarda os dados
 # enviados pelo formulário (POST) ou pela URL (GET)
-from flask import Flask, render_template, request
+# Precisamos do "os" para ler variáveis
+# de ambiente do arquivo .env
+# Adicionamos "flash" na importação do Flask
+# Ele permite guardar mensagens temporárias
+# para exibir ao usuário (ex: erros, avisos)
+# generate_password_hash: transforma a senha
+# em um hash seguro e irreversível antes de salvar
+import os
+from flask import Flask, render_template, request, flash
 from database import conectar_banco
+from werkzeug.security import generate_password_hash
 
 # ==========================================
 # CRIAÇÃO DA APLICAÇÃO
@@ -17,6 +26,12 @@ from database import conectar_banco
 
 # Cria uma instância da aplicação Flask
 app = Flask(__name__)
+
+# A SECRET_KEY é usada pelo Flask para proteger
+# dados da sessão (como as mensagens do flash())
+# contra adulteração. Ela é carregada do .env
+# para não ficar exposta no código.
+app.secret_key = os.environ.get("SECRET_KEY")
 
 # ==========================================
 # ROTA PRINCIPAL
@@ -58,16 +73,63 @@ def cadastro():
         email = request.form["email"]
         senha = request.form["senha"]
         confirmar_senha = request.form["confirmar_senha"]
-        # Por enquanto, vamos só imprimir no terminal
-        # pra confirmar que está pegando certinho
-        print(f"Nome: {nome}")
-        print(f"Email: {email}")
-        print(f"Senha: {senha}")
-        print(f"Confirmar senha: {confirmar_senha}")
-        pass
+        # ==========================================
+        # VALIDAÇÃO: as senhas digitadas são iguais?
+        # ==========================================
+        if senha != confirmar_senha:
+            # flash() guarda uma mensagem temporária
+            # que pode ser exibida no HTML depois
+            flash("As senhas não conferem. Por favor, tente novamente.", "erro")
+        
+            # Aqui sim: se deu erro, mostramos a página
+            # de cadastro de novo, sem salvar nada
+            return render_template("Cadastro.html")
 
-    #Carrega a página cadastro.html
-    return render_template("cadastro.html")
+# ==========================================
+# GERA O HASH DA SENHA
+# ==========================================
+
+        # Nunca salvamos a senha em texto puro no banco.
+        # generate_password_hash transforma a senha
+        # original em um código embaralhado e seguro.
+        senha_hash = generate_password_hash(senha)
+        
+
+        
+# ==========================================
+# SALVA O USUÁRIO NO BANCO DE DADOS
+# ==========================================
+
+        # Abre uma conexão com o PostgreSQL
+        conexao = conectar_banco()
+
+        # O cursor é o "objeto" que executa comandos SQL
+        cursor = conexao.cursor()
+
+        # Executa o INSERT, usando %s como placeholders
+        # para evitar SQL Injection (nunca montar a query
+        # colando as variáveis direto na string!)
+        cursor.execute(
+            "INSERT INTO usuarios (nome, email, senha) VALUES (%s, %s, %s)",
+            (nome, email, senha_hash)
+        )
+
+        # commit() confirma a alteração no banco
+        # (sem isso, o INSERT não é salvo de verdade)
+        conexao.commit()
+
+        # Fecha o cursor e a conexão, liberando recursos
+        cursor.close()
+        conexao.close()
+
+        print("Usuário cadastrado com sucesso no banco!")
+
+    # ==========================================
+    # Esse return é o "padrão":
+    # roda quando o método é GET (visita normal),
+    # ou quando o POST terminou o cadastro com sucesso
+    # ==========================================
+    return render_template("Cadastro.html")
 
 # ==========================================
 # ROTA DE TESTE DO BANCO DE DADOS

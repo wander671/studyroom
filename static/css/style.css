@@ -404,3 +404,40 @@ footer {
     }
 
 }
+
+/* ==========================================
+   AUTENTICAÇÃO (LOGIN / CADASTRO)
+========================================== */
+
+/*
+   Esta seção vai concentrar futuramente
+   todos os estilos das páginas de login
+   e cadastro (.auth-container, .auth-card,
+   .form-group, .auth-button, etc).
+
+   Por enquanto, contém apenas o estilo
+   das mensagens de erro/sucesso (flash).
+*/
+
+
+/* ==========================================
+   MENSAGENS DE FLASH (ERRO/SUCESSO)
+========================================== */
+
+.flash-mensagem {
+    padding: 10px 15px;
+
+    border-radius: 6px;
+
+    margin-bottom: 15px;
+
+    font-size: 14px;
+}
+
+.flash-erro {
+    background-color: #fdecea;
+
+    color: #b91c1c;
+
+    border: 1px solid #f5c2c0;
+}

@@ -259,7 +259,11 @@ Sala de Estudos Virtual/
 * [x] Criação do formulário de cadastro (HTML)
 * [x] Rota `/cadastro` configurada para aceitar GET e POST
 * [x] Captura dos dados do formulário com `request.form`
-* [ ] Sistema de cadastro
+* [x] Validação de senha e confirmação de senha
+* [x] Mensagens de erro com `flash()`
+* [x] Configuração da `SECRET_KEY` via `.env`
+* [x] Hash de senha com `werkzeug.security` (generate_password_hash)
+* [x] Sistema de cadastro salvando usuário no PostgreSQL
 * [ ] Sistema de login
 * [ ] Sistema de salas
 * [ ] Chat em tempo real
@@ -276,16 +280,15 @@ Sala de Estudos Virtual/
 
 ## 🎯 Próximos passos
 
-O formulário de cadastro já está funcional e capturando os dados 
-(`nome`, `email`, `senha`, `confirmar_senha`) via requisição POST.
+O sistema de cadastro está completo: o formulário captura os dados, 
+valida se as senhas conferem, gera um hash seguro com `werkzeug.security` 
+e salva o novo usuário no banco `studyroom_db`.
 
-O próximo passo é validar se a senha e a confirmação de senha são 
-iguais, aplicar hash na senha com `werkzeug.security`, e então 
-salvar o novo usuário no banco de dados `studyroom_db`.
+O próximo passo é desenvolver o **sistema de login**, validando 
+o e-mail e a senha digitados contra os dados salvos no banco 
+(usando `check_password_hash` para comparar com o hash salvo).
 
-A aplicação seguirá o fluxo:
 
-```text
 Usuário
    │
    ▼

@@ -52,6 +52,37 @@
                 StudyRoom 📚
             </div>
 
+            <!--MENSAGENS DE ERRO (FLASH)-->
+            <!--
+                get_flashed_messages busca as mensagens
+                guardadas pelo flash() no Python.
+
+                with_categories=true faz retornar tanto
+                a categoria ("erro") quanto o texto da mensagem
+            -->
+            {% with mensagens = get_flashed_messages(with_categories=true) %}
+
+                <!-- Só mostra o bloco se houver mensagens -->
+                {% if mensagens %}
+
+                    <!-- Percorre cada mensagem guardada -->
+                    {% for categoria, mensagem in mensagens %}
+
+                        <!--
+                            A classe CSS usa a categoria dinamicamente,
+                            assim "flash-erro" pode ter estilo diferente
+                            de "flash-sucesso", por exemplo
+                        -->
+                        <div class="flash-mensagem flash-{{ categoria }}">
+                            {{ mensagem }}
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            {% endwith %}
+
 
             <!-- Título -->
             <h1>
