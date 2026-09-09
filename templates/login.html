@@ -64,12 +64,31 @@
                 Entre na sua conta e continue estudando.
             </p>
 
+            <!-- ==========================================
+                 MENSAGENS DE ERRO/SUCESSO (FLASH)
+            =========================================== -->
+
+            {% with mensagens = get_flashed_messages(with_categories=true) %}
+
+                {% if mensagens %}
+
+                    {% for categoria, mensagem in mensagens %}
+
+                        <div class="flash-mensagem flash-{{ categoria }}">
+                            {{ mensagem }}
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            {% endwith %}
 
             <!-- ==========================================
                  FORMULÁRIO DE LOGIN
             =========================================== -->
 
-            <form>
+            <form method="POST" action="{{ url_for('login') }}">
 
                 <!-- Campo de e-mail -->
                 <div class="form-group">

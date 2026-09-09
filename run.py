@@ -18,7 +18,7 @@
 import os
 from flask import Flask, render_template, request, flash
 from database import conectar_banco
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # ==========================================
 # CRIAÇÃO DA APLICAÇÃO
@@ -50,11 +50,58 @@ def home():
 # ==========================================
 
 # Define a rota "/login"
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
 
+    # Verifica qual foi o método usado na requisição
+    if request.method == "POST":
+        # Aqui você pode adicionar a lógica de autenticação
+        # usando os dados enviados pelo formulário.
+        # Por exemplo, você pode buscar o usuário no banco
+        # e verificar se a senha está correta.
+        email = request.form["email"]
+        senha = request.form["senha"]
+       
+
+# ==========================================
+# BUSCA O USUÁRIO NO BANCO PELO EMAIL
+# ==========================================
+        # Abre uma conexão com o PostgreSQL
+        conexao = conectar_banco()
+        # O cursor é o "objeto" que executa comandos SQL
+        curso = conexao.cursor()
+        # Busca um usuário que tenha esse email
+        curso.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
+        # fetchone() pega o primeiro resultado encontrado
+        # Se não encontrar ninguém, retorna None
+        usuario = curso.fetchone()
+        # Fecha o cursor e a conexão, liberando recursos
+        curso.close()
+        conexao.close()
+
+        
+# ==========================================
+# VERIFICA SE O USUÁRIO EXISTE
+# ==========================================
+        if usuario is None:
+            flash("Usuário não encontrado. Por favor, verifique o email.", "erro")
+            return render_template("login.html")
+# ==========================================
+# VERIFICA SE A SENHA ESTÁ CORRETA
+# ==========================================
+        senha_hash = usuario[3]  # Supondo que a senha esteja na quarta coluna
+
+        if not check_password_hash(senha_hash,senha):
+            flash("Senha incorreta. Por favor, tente novamente.", "erro")
+            return render_template("login.html")
+# ==========================================
+# LOGIN VÁLIDO!
+# ==========================================
+
+        flash(f"Bem-vindo(a), {usuario[1]}!", "sucesso")   
+
     # Carrega a página login.html
-    return render_template("login.html")
+    return render_template("Login.html")
 
 # ==========================================
 # ROTA DE CADASTRO
@@ -122,7 +169,7 @@ def cadastro():
         cursor.close()
         conexao.close()
 
-        print("Usuário cadastrado com sucesso no banco!")
+        flash("Usuário cadastrado com sucesso!", "sucesso")
 
     # ==========================================
     # Esse return é o "padrão":
@@ -142,10 +189,11 @@ def teste_banco():
         # Fecha a conexão após o teste
         conexao.close()
         # Retorna uma mensagem informando que a conexão funcionou
+        flash("Conexão com o PostgreSQL estabelecida com sucesso!", "sucesso")
         return "StudyRoom conectado ao PostgreSQL! 🐘"
     except Exception as erro:
         # Captura qualquer erro na conexão com o banco
-        print(f"Erro ao conectar ao PostgreSQL: {erro}")
+        flash("Erro ao conectar ao PostgreSQL.", "erro")
         return "Erro ao conectar ao PostgreSQL.", 500
 
 

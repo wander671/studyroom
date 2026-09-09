@@ -441,3 +441,11 @@ footer {
 
     border: 1px solid #f5c2c0;
 }
+
+.flash-sucesso {
+    background-color: #eafaf0;
+
+    color: #15803d;
+
+    border: 1px solid #b7e8c6;
+}

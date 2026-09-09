@@ -6,13 +6,15 @@ O **StudyRoom** é uma plataforma de estudos colaborativos criada para proporcio
 
 A proposta é permitir que usuários entrem em salas virtuais de estudo, escolham um personagem, encontrem outras pessoas estudando no mesmo ambiente, conversem através de um chat em tempo real, escutem música e utilizem ferramentas para melhorar a concentração.
 
+Além disso, o StudyRoom está evoluindo para se tornar também uma **plataforma de aprendizagem para quem está começando em tecnologia**, com trilhas de estudo organizadas (cursos, módulos e aulas em vídeo), permitindo que o usuário siga um caminho estruturado de aprendizado, além de estudar em comunidade.
+
 🚧 **Projeto em desenvolvimento**
 
 ---
 
 ## 🎯 Objetivo
 
-Criar uma experiência de estudo compartilhado, proporcionando a sensação de estar estudando junto com outras pessoas, mesmo que cada usuário esteja em seu próprio ambiente.
+Criar uma experiência de estudo compartilhado, proporcionando a sensação de estar estudando junto com outras pessoas, mesmo que cada usuário esteja em seu próprio ambiente — combinando isso com trilhas de aprendizagem estruturadas para iniciantes em tecnologia.
 
 ---
 
@@ -30,6 +32,8 @@ Criar uma experiência de estudo compartilhado, proporcionando a sensação de e
 * 🔐 Autenticação e segurança
 * 📱 Interface responsiva
 * 🌐 API REST
+* 🎓 Trilhas de aprendizagem (cursos, módulos e aulas em vídeo)
+* 📈 Registro de progresso do usuário nas trilhas
 * ☁️ Deploy da aplicação
 
 ---
@@ -44,6 +48,7 @@ Criar uma experiência de estudo compartilhado, proporcionando a sensação de e
 * 🐘 PostgreSQL
 * 🔌 Psycopg
 * 🔐 Python-dotenv
+* 🔒 Werkzeug Security (hash de senha)
 
 ### Frontend
 
@@ -79,13 +84,11 @@ usuarios
 ├── id
 ├── nome
 ├── email
-├── senha
+├── senha (hash)
 └── data_criacao
 ```
 
-A tabela `usuarios` já foi criada e testada no PostgreSQL.
-
-Também foi realizado um cadastro de usuário para validar o funcionamento do banco.
+A tabela `usuarios` já foi criada e testada no PostgreSQL, com cadastro e login de usuários reais validados.
 
 > 🔐 As credenciais do banco são armazenadas através de variáveis de ambiente utilizando o arquivo `.env`. O arquivo `.env` não deve ser enviado para o GitHub.
 
@@ -173,6 +176,27 @@ Essa etapa confirma a integração entre o **Flask**, o módulo `database.py` e 
 
 ---
 
+## 🔐 Cadastro e Login de Usuários
+
+O fluxo completo de autenticação já está implementado:
+
+**Cadastro (`/cadastro`)**
+- Captura `nome`, `email`, `senha` e `confirmar_senha` via `request.form`
+- Valida se a senha e a confirmação de senha são iguais
+- Gera um hash seguro da senha com `generate_password_hash` (Werkzeug) — a senha original nunca é salva no banco
+- Insere o novo usuário no PostgreSQL com uma query parametrizada (`%s`), evitando SQL Injection
+
+**Login (`/login`)**
+- Captura `email` e `senha` via `request.form`
+- Busca o usuário no banco pelo `email`
+- Compara a senha digitada com o hash salvo usando `check_password_hash`
+- Utiliza **mensagens de erro genéricas** ("E-mail ou senha incorretos") tanto para email inexistente quanto para senha errada, evitando enumeração de usuários (prática de segurança conhecida)
+
+**Feedback ao usuário**
+- Mensagens de erro e sucesso são exibidas através do sistema `flash()` do Flask, com uma `SECRET_KEY` protegida via `.env`
+
+---
+
 ## 🏗️ Arquitetura
 
 A aplicação será construída utilizando uma arquitetura organizada, separando responsabilidades entre backend, frontend, banco de dados e comunicação em tempo real.
@@ -233,7 +257,7 @@ Sala de Estudos Virtual/
 
 ## 📌 Status do projeto
 
-### Fase atual — Integração Flask + PostgreSQL
+### Fase atual — Autenticação completa (cadastro + login)
 
 * [x] Planejamento do projeto
 * [x] Definição da arquitetura inicial
@@ -264,7 +288,13 @@ Sala de Estudos Virtual/
 * [x] Configuração da `SECRET_KEY` via `.env`
 * [x] Hash de senha com `werkzeug.security` (generate_password_hash)
 * [x] Sistema de cadastro salvando usuário no PostgreSQL
-* [ ] Sistema de login
+* [x] Sistema de login validando email e senha
+* [x] Busca de usuário no banco por email (SELECT)
+* [x] Comparação de senha com `check_password_hash`
+* [x] Mensagens de erro/sucesso no login (flash)
+* [x] Tratamento de erro genérico por segurança (evita enumeração de usuários)
+* [ ] Sessão de usuário logado (Flask session)
+* [ ] Modelagem das trilhas de aprendizagem
 * [ ] Sistema de salas
 * [ ] Chat em tempo real
 * [ ] Sistema de personagens
@@ -278,21 +308,22 @@ Sala de Estudos Virtual/
 
 ## 🎯 Próximos passos
 
-## 🎯 Próximos passos
+Cadastro e login estão completos e funcionais, com senhas protegidas por hash e mensagens de feedback para o usuário via `flash()`.
 
-O sistema de cadastro está completo: o formulário captura os dados, 
-valida se as senhas conferem, gera um hash seguro com `werkzeug.security` 
-e salva o novo usuário no banco `studyroom_db`.
+O próximo passo é implementar **sessão de usuário** (Flask `session`), para que o sistema "lembre" que o usuário está autenticado ao navegar entre páginas.
 
-O próximo passo é desenvolver o **sistema de login**, validando 
-o e-mail e a senha digitados contra os dados salvos no banco 
-(usando `check_password_hash` para comparar com o hash salvo).
+Depois disso, o projeto vai seguir por duas frentes:
 
+1. 🎓 **Trilhas de aprendizagem** — modelagem de `trilhas`, `modulos` e `aulas` (com vídeos do YouTube), permitindo que o usuário siga um caminho estruturado de estudo com registro de progresso
+2. 🏠 **Salas virtuais e chat em tempo real** — funcionalidade social original do projeto, usando Flask-SocketIO
 
+Fluxo atual de autenticação:
+
+```text
 Usuário
    │
    ▼
-Formulário de Cadastro
+Formulário de Cadastro/Login
    │
    ▼
 Flask
@@ -307,20 +338,20 @@ PostgreSQL
 usuarios
 ```
 
-O sistema deverá permitir o cadastro de novos usuários no banco de dados `studyroom_db`.
+Ordem geral de desenvolvimento planejada:
 
-Após o cadastro, serão desenvolvidos:
-
-1. 🔐 Sistema de login
-2. 🔒 Autenticação e segurança
-3. 🏠 Sistema de salas virtuais
-4. 💬 Chat em tempo real
-5. 🧑‍💻 Sistema de personagens
-6. 🎵 Player de música
-7. ⏱️ Pomodoro
-8. 📊 Registro das sessões de estudo
-9. 🧪 Testes
-10. ☁️ Deploy
+1. ✅ Sistema de cadastro
+2. ✅ Sistema de login
+3. 🔒 Sessão de usuário autenticado
+4. 🎓 Trilhas de aprendizagem
+5. 🏠 Sistema de salas virtuais
+6. 💬 Chat em tempo real
+7. 🧑‍💻 Sistema de personagens
+8. 🎵 Player de música
+9. ⏱️ Pomodoro
+10. 📊 Registro das sessões de estudo
+11. 🧪 Testes
+12. ☁️ Deploy
 
 ---
 
@@ -335,4 +366,3 @@ Projeto desenvolvido para estudos, evolução profissional e construção de por
 ⭐ **StudyRoom está em desenvolvimento.**
 
 Novas funcionalidades serão adicionadas durante as próximas etapas do projeto.
-
