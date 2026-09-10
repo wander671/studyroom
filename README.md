@@ -76,7 +76,7 @@ Banco utilizado:
 studyroom_db
 ```
 
-### Tabela atual
+### Tabelas atuais
 
 ```text
 usuarios
@@ -86,9 +86,37 @@ usuarios
 ├── email
 ├── senha (hash)
 └── data_criacao
+
+
+trilhas
+│
+├── id
+├── titulo
+├── descricao
+├── nivel
+└── criado_em
+
+
+modulos
+│
+├── id
+├── trilha_id      → referencia trilhas(id)
+├── titulo
+└── ordem
+
+
+aulas
+│
+├── id
+├── modulo_id      → referencia modulos(id)
+├── titulo
+├── video_youtube_id
+└── ordem
 ```
 
 A tabela `usuarios` já foi criada e testada no PostgreSQL, com cadastro e login de usuários reais validados.
+
+As tabelas `trilhas`, `modulos` e `aulas` já foram criadas, conectadas por **chaves estrangeiras** (`REFERENCES`), garantindo que um módulo não possa existir sem uma trilha válida, e uma aula não possa existir sem um módulo válido. Foram inseridos dados de teste: a trilha "Fundamentos de Python", com 2 módulos e 2 aulas (incluindo o código do vídeo do YouTube de cada aula).
 
 > 🔐 As credenciais do banco são armazenadas através de variáveis de ambiente utilizando o arquivo `.env`. O arquivo `.env` não deve ser enviado para o GitHub.
 
@@ -176,7 +204,7 @@ Essa etapa confirma a integração entre o **Flask**, o módulo `database.py` e 
 
 ---
 
-## 🔐 Cadastro e Login de Usuários
+## 🔐 Autenticação: Cadastro, Login e Sessão
 
 O fluxo completo de autenticação já está implementado:
 
@@ -191,9 +219,33 @@ O fluxo completo de autenticação já está implementado:
 - Busca o usuário no banco pelo `email`
 - Compara a senha digitada com o hash salvo usando `check_password_hash`
 - Utiliza **mensagens de erro genéricas** ("E-mail ou senha incorretos") tanto para email inexistente quanto para senha errada, evitando enumeração de usuários (prática de segurança conhecida)
+- Ao validar com sucesso, guarda o `id` do usuário em `session["usuario_id"]`
+
+**Sessão e Logout**
+- A sessão utiliza a `SECRET_KEY` (protegida via `.env`) para assinar os dados e evitar adulteração
+- A rota `/logout` remove o `usuario_id` da sessão (`session.pop`) e redireciona para o login
+
+**Proteção de rotas (`@login_obrigatorio`)**
+- Decorator personalizado, criado com `functools.wraps`, que verifica se existe um `usuario_id` na sessão antes de liberar o acesso a uma rota
+- Se o usuário não estiver logado, é redirecionado automaticamente para `/login` com uma mensagem de aviso
+- Pode ser aplicado em qualquer rota, bastando adicionar `@login_obrigatorio` logo abaixo do `@app.route(...)`
 
 **Feedback ao usuário**
-- Mensagens de erro e sucesso são exibidas através do sistema `flash()` do Flask, com uma `SECRET_KEY` protegida via `.env`
+- Mensagens de erro e sucesso são exibidas através do sistema `flash()` do Flask
+
+---
+
+## 🎓 Trilhas de Aprendizagem (em construção)
+
+A estrutura de dados das trilhas já está modelada e populada com dados de teste:
+
+```text
+trilhas (1) ──< modulos (N) ──< aulas (N)
+```
+
+Cada trilha tem vários módulos, e cada módulo tem várias aulas, cada uma com um vídeo do YouTube associado (salvo apenas pelo código do vídeo, para facilitar a exibição via `<iframe>` de embed).
+
+A rota `/trilha/<int:trilha_id>` está em desenvolvimento — ela vai buscar os dados da trilha, seus módulos e aulas relacionadas, e exibir tudo em uma página, protegida pelo decorator `@login_obrigatorio`.
 
 ---
 
@@ -257,7 +309,7 @@ Sala de Estudos Virtual/
 
 ## 📌 Status do projeto
 
-### Fase atual — Autenticação completa (cadastro + login)
+### Fase atual — Autenticação completa + modelagem das trilhas
 
 * [x] Planejamento do projeto
 * [x] Definição da arquitetura inicial
@@ -293,8 +345,14 @@ Sala de Estudos Virtual/
 * [x] Comparação de senha com `check_password_hash`
 * [x] Mensagens de erro/sucesso no login (flash)
 * [x] Tratamento de erro genérico por segurança (evita enumeração de usuários)
-* [ ] Sessão de usuário logado (Flask session)
-* [ ] Modelagem das trilhas de aprendizagem
+* [x] Implementação de sessão de usuário (Flask session)
+* [x] Rota de logout removendo a sessão
+* [x] Decorator `@login_obrigatorio` para proteger rotas
+* [x] Modelagem das tabelas `trilhas`, `modulos` e `aulas`
+* [x] Chaves estrangeiras conectando trilhas → módulos → aulas
+* [x] Inserção de dados de teste (trilha "Fundamentos de Python")
+* [ ] Rota `/trilha/<id>` buscando e exibindo dados no HTML
+* [ ] Exibição de vídeos do YouTube incorporados (iframe)
 * [ ] Sistema de salas
 * [ ] Chat em tempo real
 * [ ] Sistema de personagens
@@ -308,42 +366,23 @@ Sala de Estudos Virtual/
 
 ## 🎯 Próximos passos
 
-Cadastro e login estão completos e funcionais, com senhas protegidas por hash e mensagens de feedback para o usuário via `flash()`.
+Autenticação está completa: cadastro, login, sessão de usuário, logout e proteção de rotas com o decorator `@login_obrigatorio`.
 
-O próximo passo é implementar **sessão de usuário** (Flask `session`), para que o sistema "lembre" que o usuário está autenticado ao navegar entre páginas.
+As tabelas de trilhas de aprendizagem (`trilhas`, `modulos`, `aulas`) já foram modeladas e populadas com dados de teste.
+
+O próximo passo é criar a rota `/trilha/<id>`, que busca os dados no banco (trilha, módulos e aulas relacionadas) e exibe tudo numa página HTML, incluindo os vídeos do YouTube incorporados via `<iframe>`.
 
 Depois disso, o projeto vai seguir por duas frentes:
 
-1. 🎓 **Trilhas de aprendizagem** — modelagem de `trilhas`, `modulos` e `aulas` (com vídeos do YouTube), permitindo que o usuário siga um caminho estruturado de estudo com registro de progresso
+1. 🎓 **Trilhas de aprendizagem** — finalizar a exibição das trilhas, módulos e aulas, e implementar o registro de progresso do usuário
 2. 🏠 **Salas virtuais e chat em tempo real** — funcionalidade social original do projeto, usando Flask-SocketIO
-
-Fluxo atual de autenticação:
-
-```text
-Usuário
-   │
-   ▼
-Formulário de Cadastro/Login
-   │
-   ▼
-Flask
-   │
-   ▼
-database.py
-   │
-   ▼
-PostgreSQL
-   │
-   ▼
-usuarios
-```
 
 Ordem geral de desenvolvimento planejada:
 
 1. ✅ Sistema de cadastro
 2. ✅ Sistema de login
-3. 🔒 Sessão de usuário autenticado
-4. 🎓 Trilhas de aprendizagem
+3. ✅ Sessão de usuário autenticado
+4. 🎓 Trilhas de aprendizagem *(em andamento)*
 5. 🏠 Sistema de salas virtuais
 6. 💬 Chat em tempo real
 7. 🧑‍💻 Sistema de personagens

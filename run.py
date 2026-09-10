@@ -16,7 +16,7 @@
 # generate_password_hash: transforma a senha
 # em um hash seguro e irreversível antes de salvar
 import os
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, session, redirect, url_for
 from database import conectar_banco
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -34,6 +34,41 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY")
 
 # ==========================================
+# IMPORTAÇÃO NECESSÁRIA
+# ==========================================
+
+# "wraps" preserva o nome/metadados da função
+# original quando ela é "envolvida" pelo decorator
+# (sem isso, o Flask pode se confudir entre rotas)
+from functools import wraps
+
+# ==========================================
+# DECORATOR: LOGIN OBRIGATÓRIO
+# ==========================================
+def login_obrigatorio(funcao):
+    """
+    Decorator que verifica se o usuário está logado
+    antes de permitir o acesso à rota.
+
+    Se não estiver logado, redireciona para /login.
+    Se estiver logado, executa a rota normalmente
+
+    """
+    @wraps(funcao)
+    def funcao_protegida(*args, **kwargs):
+
+        #Verifica de existe um usuario_id na sessão
+        if "usuario_id" not in session:
+
+            flash("você precisa estar logado para acessar essa página." "erro")
+            return redirect(url_for("login"))
+
+        # Se está logado, executa a rota normalmente
+        return funcao(*args, **kwargs)
+
+    return funcao_protegida
+
+# ==========================================
 # ROTA PRINCIPAL
 # ==========================================
 
@@ -44,6 +79,23 @@ def home():
     # Renderiza o arquivo index.html localizado
     # dentro da pasta templates
     return render_template("index.html")
+
+# ==========================================
+# ROTA DE LOGOUT
+# ==========================================
+@app.route("/logout")
+def logaut():
+
+# Remove o usuario_id da sessão
+# pop() remove o item e retorna o valor removido
+# (não vamos usar o valor aqui, só queremos remover)
+    session.pop("usuario_id", None)
+
+    # Avisa o usuário que ele saiu com sucesso
+    flash("Você saiu da sua conta.", "sucesso")
+
+    # Redireciona o usuário para a página de login
+    return redirect(url_for("login"))
 
 # ==========================================
 # ROTA DE LOGIN
@@ -97,6 +149,11 @@ def login():
 # ==========================================
 # LOGIN VÁLIDO!
 # ==========================================
+        # Guarda o id do usuário na sessão.
+        # Isso "lembra" que ele está logado enquanto
+        # navega pelo site, até fazer logout ou fechar
+        # o navegador (dependendo da configuração).
+        session["usuario_id"] = usuario[0]
 
         flash(f"Bem-vindo(a), {usuario[1]}!", "sucesso")   
 
