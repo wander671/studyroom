@@ -253,6 +253,17 @@ def teste_banco():
         flash("Erro ao conectar ao PostgreSQL.", "erro")
         return "Erro ao conectar ao PostgreSQL.", 500
 
+# ==========================================
+# ROTA DE DETALHES DA TRILHA
+# ==========================================
+@app.route("/trilha/<int:trilha_id>")
+@login_obrigatorio
+def trilha(trilha_id):
+
+    # Por enquanto, só confirmamos que o id
+    # chegou certinho na função
+    return f"Você está vendo a trilha de id: {trilha_id}"
+
 
 # ==========================================
 # EXECUÇÃO DA APLICAÇÃO
