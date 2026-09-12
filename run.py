@@ -253,17 +253,38 @@ def teste_banco():
         flash("Erro ao conectar ao PostgreSQL.", "erro")
         return "Erro ao conectar ao PostgreSQL.", 500
 
+
 # ==========================================
-# ROTA DE DETALHES DA TRILHA
+# ROTA DE DETALHES Da TRILHA
 # ==========================================
 @app.route("/trilha/<int:trilha_id>")
 @login_obrigatorio
 def trilha(trilha_id):
 
-    # Por enquanto, só confirmamos que o id
-    # chegou certinho na função
-    return f"Você está vendo a trilha de id: {trilha_id}"
+    conexao = conectar_banco()
+    cursor = conexao.cursor()
 
+    # Busca os dados da trilha
+    cursor.execute(
+        "SELECT id, titulo, descricao, nivel FROM trilhas WHERE id = %s",
+        (trilha_id,)
+    )
+    dados_trilha = cursor.fetchone()
+
+    # Busca os módulos de trilha, em ordem
+    cursor.execute(
+        "SELECT id, titulo, ordem FROM modulos WHERE trilha_id = %s ORDER BY ordem",
+        (trilha_id,)
+    )
+    modulos = cursor.fetchall()
+
+    cursor.close()
+    conexao.close()
+
+    print(f"Trilha encontrada: {dados_trilha}")
+    print(f"Módulos encontrados: {modulos}")
+
+    return f"Você está vendo a trilha de id: {trilha_id}"
 
 # ==========================================
 # EXECUÇÃO DA APLICAÇÃO
