@@ -245,7 +245,11 @@ trilhas (1) ──< modulos (N) ──< aulas (N)
 
 Cada trilha tem vários módulos, e cada módulo tem várias aulas, cada uma com um vídeo do YouTube associado (salvo apenas pelo código do vídeo, para facilitar a exibição via `<iframe>` de embed).
 
-A rota `/trilha/<int:trilha_id>` está em desenvolvimento — ela vai buscar os dados da trilha, seus módulos e aulas relacionadas, e exibir tudo em uma página, protegida pelo decorator `@login_obrigatorio`.
+**Rota `/trilha/<int:trilha_id>`** (protegida por `@login_obrigatorio`):
+- Busca os dados da trilha pelo `id` (`fetchone`)
+- Busca todos os módulos dessa trilha, em ordem (`fetchall`)
+- Para cada módulo, busca as aulas relacionadas (`WHERE modulo_id = %s`), e monta uma lista de dicionários (`modulos_com_aulas`), onde cada módulo já carrega a lista das suas próprias aulas
+- O backend dessa rota já está funcionando e testado via terminal — falta apenas criar o `trilha.html` para exibir tudo visualmente, passando `dados_trilha` e `modulos_com_aulas` para o template com `render_template`
 
 ---
 
@@ -309,7 +313,7 @@ Sala de Estudos Virtual/
 
 ## 📌 Status do projeto
 
-### Fase atual — Autenticação completa + modelagem das trilhas
+### Fase atual — Trilhas de aprendizagem (backend concluído, frontend pendente)
 
 * [x] Planejamento do projeto
 * [x] Definição da arquitetura inicial
@@ -351,7 +355,8 @@ Sala de Estudos Virtual/
 * [x] Modelagem das tabelas `trilhas`, `modulos` e `aulas`
 * [x] Chaves estrangeiras conectando trilhas → módulos → aulas
 * [x] Inserção de dados de teste (trilha "Fundamentos de Python")
-* [ ] Rota `/trilha/<id>` buscando e exibindo dados no HTML
+* [x] Rota `/trilha/<id>` busca trilha, módulos e aulas relacionadas no banco
+* [ ] Criação do `trilha.html` exibindo os dados recebidos
 * [ ] Exibição de vídeos do YouTube incorporados (iframe)
 * [ ] Sistema de salas
 * [ ] Chat em tempo real
@@ -368,9 +373,9 @@ Sala de Estudos Virtual/
 
 Autenticação está completa: cadastro, login, sessão de usuário, logout e proteção de rotas com o decorator `@login_obrigatorio`.
 
-As tabelas de trilhas de aprendizagem (`trilhas`, `modulos`, `aulas`) já foram modeladas e populadas com dados de teste.
+O backend da rota `/trilha/<id>` está completo e testado: ele busca a trilha, seus módulos (em ordem) e, para cada módulo, as aulas relacionadas — tudo organizado em uma lista de dicionários (`modulos_com_aulas`), pronta para ser usada no template.
 
-O próximo passo é criar a rota `/trilha/<id>`, que busca os dados no banco (trilha, módulos e aulas relacionadas) e exibe tudo numa página HTML, incluindo os vídeos do YouTube incorporados via `<iframe>`.
+O próximo passo é criar o `trilha.html`, passando `dados_trilha` e `modulos_com_aulas` via `render_template`, e usar comandos do Jinja (`{% for %}`) para percorrer módulos e aulas na tela, exibindo os vídeos do YouTube incorporados via `<iframe>`.
 
 Depois disso, o projeto vai seguir por duas frentes:
 
@@ -382,7 +387,7 @@ Ordem geral de desenvolvimento planejada:
 1. ✅ Sistema de cadastro
 2. ✅ Sistema de login
 3. ✅ Sessão de usuário autenticado
-4. 🎓 Trilhas de aprendizagem *(em andamento)*
+4. 🎓 Trilhas de aprendizagem *(backend pronto, frontend em andamento)*
 5. 🏠 Sistema de salas virtuais
 6. 💬 Chat em tempo real
 7. 🧑‍💻 Sistema de personagens

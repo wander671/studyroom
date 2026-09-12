@@ -278,13 +278,45 @@ def trilha(trilha_id):
     )
     modulos = cursor.fetchall()
 
+# ==========================================
+# BUSCA AS AULAS DE CADA MÓDULO
+# ==========================================
+    
+    # Vamos guadar aqui uma lista de dicionários,
+    # onde cada item representa um módulo JUNTO
+    # com suas salas
+    modulos_com_aulas = []
+
+    # Percorre cada módulo da lista que ja buscamos
+    for modulo in modulos:
+
+        # modulo[0] é o id do módulo específico, em ordem
+        modulo_id = modulo[0]
+
+        # Busca as aulas desse módulo específico, em ordem
+        cursor.execute(
+            "SELECT id, titulo, video_youtube_id, ordem FROM aulas WHERE modulo_id = %s ORDER BY ordem",
+            (modulo_id,)
+        )
+        aulas = cursor.fetchall()
+
+        # Monta um dicionário juntando os dados do módulo
+        # com a lista de aulas dele
+        modulos_com_aulas.append({
+            "id": modulo[0],
+            "titulo": modulo[1],
+            "ordem":modulo[2],
+            "aulas": aulas
+        })
+
     cursor.close()
     conexao.close()
 
     print(f"Trilha encontrada: {dados_trilha}")
-    print(f"Módulos encontrados: {modulos}")
+    print(f"Módulos com aulas: {modulos_com_aulas}")
 
     return f"Você está vendo a trilha de id: {trilha_id}"
+
 
 # ==========================================
 # EXECUÇÃO DA APLICAÇÃO
