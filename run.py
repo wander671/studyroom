@@ -157,8 +157,10 @@ def login():
 
         flash(f"Bem-vindo(a), {usuario[1]}!", "sucesso")   
 
-    # Carrega a página login.html
-    return render_template("Login.html")
+        # Redireciona para a página de trilhas,
+        # já que o login foi bem-sucedido
+        return redirect(url_for("trilhas"))
+    return render_template("login.html")
 
 # ==========================================
 # ROTA DE CADASTRO
@@ -295,7 +297,7 @@ def trilha(trilha_id):
 
         # Busca as aulas desse módulo específico, em ordem
         cursor.execute(
-            "SELECT id, titulo, video_youtube_id, ordem FROM aulas WHERE modulo_id = %s ORDER BY ordem",
+            "SELECT id, titulo, arquivo_pdf, ordem FROM aulas WHERE modulo_id = %s ORDER BY ordem",
             (modulo_id,)
         )
         aulas = cursor.fetchall()

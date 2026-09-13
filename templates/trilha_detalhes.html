@@ -32,15 +32,26 @@
 
                                 <p>{{ aula[1] }}</p>
 
-                                <iframe 
-                                    src="https://www.youtube.com/embed/{{ aula[2] }}"
-                                    allowfullscreen>
-                                </iframe>
+                                <embed 
+                                    src="{{ url_for('static', filename='pdfs/' + aula[2]) }}" 
+                                    type="application/pdf"
+                                    width="100%"
+                                    height="600px">
+
+                                <!--
+                                    target="_blank" abre em uma nova aba,
+                                    usando o visualizador de PDF nativo do navegador
+                                -->
+                                <a 
+                                    href="{{ url_for('static', filename='pdfs/' + aula[2]) }}" 
+                                    target="_blank"
+                                    class="btn-secundario">
+                                    Abrir em tela cheia
+                                </a>
 
                             </div>
 
                         {% endfor %}
-
                     {% else %}
 
                         <p class="sem-aulas">Nenhuma aula cadastrada ainda neste módulo.</p>
