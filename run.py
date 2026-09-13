@@ -316,7 +316,7 @@ def trilha(trilha_id):
     print(f"Módulos com aulas: {modulos_com_aulas}")
 
     return render_template(
-        "trilha.html",
+        "trilha_detalhes.html",
         trilha=dados_trilha,
         modulos=modulos_com_aulas
     )
@@ -337,7 +337,7 @@ def trilhas():
     cursor.close()
     conexao.close()
 
-    return render_template("trilhas.html", trilhas=lista_trilhas)
+    return render_template("trilhas_lista.html", trilhas=lista_trilhas)
 
 
 # ==========================================

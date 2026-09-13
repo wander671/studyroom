@@ -1,0 +1,75 @@
+<!-- ==========================================
+     STUDYROOM - PÁGINA DA TRILHA
+========================================== -->
+
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ trilha[1] }} | StudyRoom</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+    <main>
+
+        <div class="trilha-header">
+
+            <span class="badge-nivel">{{ trilha[3] }}</span>
+
+            <h1>{{ trilha[1] }}</h1>
+
+            <p>{{ trilha[2] }}</p>
+
+        </div>
+
+        <div class="modulos-container">
+
+            {% for modulo in modulos %}
+
+                <section class="modulo">
+
+                    <h2>{{ modulo.titulo }}</h2>
+
+                    {% if modulo.aulas %}
+
+                        {% for aula in modulo.aulas %}
+
+                            <div class="aula">
+
+                                <p>{{ aula[1] }}</p>
+
+                                <iframe 
+                                    src="https://www.youtube.com/embed/{{ aula[2] }}"
+                                    allowfullscreen>
+                                </iframe>
+
+                            </div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <p class="sem-aulas">Nenhuma aula cadastrada ainda neste módulo.</p>
+
+                    {% endif %}
+
+                </section>
+
+            {% endfor %}
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

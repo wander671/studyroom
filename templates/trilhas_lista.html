@@ -1,0 +1,61 @@
+<!-- ==========================================
+     STUDYROOM - LISTAGEM DE TRILHAS
+========================================== -->
+
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Trilhas de Aprendizagem | StudyRoom</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+    <main class="trilhas-container">
+
+        <h1 class="trilhas-titulo">Trilhas de Aprendizagem</h1>
+
+        <!-- ==========================================
+             GRID DE CARDS DE TRILHA
+        =========================================== -->
+
+        <div class="trilhas-grid">
+
+            <!-- Percorre cada trilha da lista "trilhas" -->
+            {% for trilha in trilhas %}
+
+                <div class="card-trilha">
+
+                    <!-- trilha[3] é o nível -->
+                    <span class="badge-nivel">{{ trilha[3] }}</span>
+
+                    <!-- trilha[1] é o título -->
+                    <h2>{{ trilha[1] }}</h2>
+
+                    <!-- trilha[2] é a descrição -->
+                    <p>{{ trilha[2] }}</p>
+
+                    <!-- Link para a página de detalhes dessa trilha -->
+                    <a href="{{ url_for('trilha', trilha_id=trilha[0]) }}" class="btn-secundario">
+                        Ver trilha
+                    </a>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>
