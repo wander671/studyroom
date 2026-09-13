@@ -255,7 +255,7 @@ def teste_banco():
 
 
 # ==========================================
-# ROTA DE DETALHES Da TRILHA
+# ROTA DE DETALHES DA TRILHA
 # ==========================================
 @app.route("/trilha/<int:trilha_id>")
 @login_obrigatorio
@@ -315,7 +315,29 @@ def trilha(trilha_id):
     print(f"Trilha encontrada: {dados_trilha}")
     print(f"Módulos com aulas: {modulos_com_aulas}")
 
-    return f"Você está vendo a trilha de id: {trilha_id}"
+    return render_template(
+        "trilha.html",
+        trilha=dados_trilha,
+        modulos=modulos_com_aulas
+    )
+
+# ==========================================
+# ROTA DE LISTAGEM DE TRILHAS
+# ==========================================
+@app.route("/trilhas")
+@login_obrigatorio
+def trilhas():
+
+    conexao = conectar_banco()
+    cursor = conexao.cursor()
+
+    cursor.execute("SELECT id, titulo, descricao, nivel FROM trilhas")
+    lista_trilhas = cursor.fetchall()
+
+    cursor.close()
+    conexao.close()
+
+    return render_template("trilhas.html", trilhas=lista_trilhas)
 
 
 # ==========================================
