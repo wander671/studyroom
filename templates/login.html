@@ -1,96 +1,27 @@
-<!-- ==========================================
-     STUDYROOM - PÁGINA DE LOGIN
-========================================== -->
+{% extends "base.html" %}
 
-<!DOCTYPE html>
+{% block title %}Entrar | StudyRoom{% endblock %}
 
-<!-- Define o idioma da página -->
-<html lang="pt-BR">
-
-<head>
-
-    <!-- ==========================================
-         CONFIGURAÇÕES DA PÁGINA
-    =========================================== -->
-
-    <!-- Permite caracteres especiais -->
-    <meta charset="UTF-8">
-
-    <!-- Responsividade -->
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <!-- Título da página -->
-    <title>Entrar | StudyRoom</title>
-
-
-    <!-- ==========================================
-         ARQUIVO CSS
-    =========================================== -->
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/style.css') }}">
-
-</head>
-
-<body>
-
-    <!-- ==========================================
-         ÁREA PRINCIPAL DO LOGIN
-    =========================================== -->
+{% block conteudo %}
 
     <main class="auth-container">
 
-        <!-- ==========================================
-             CARD DE LOGIN
-        =========================================== -->
-
         <section class="auth-card">
 
-            <!-- Logo -->
             <div class="auth-logo">
                 StudyRoom 📚
             </div>
 
-
-            <!-- Título -->
             <h1>
                 Bem-vindo de volta!
             </h1>
 
-
-            <!-- Descrição -->
             <p class="auth-description">
                 Entre na sua conta e continue estudando.
             </p>
 
-            <!-- ==========================================
-                 MENSAGENS DE ERRO/SUCESSO (FLASH)
-            =========================================== -->
-
-            {% with mensagens = get_flashed_messages(with_categories=true) %}
-
-                {% if mensagens %}
-
-                    {% for categoria, mensagem in mensagens %}
-
-                        <div class="flash-mensagem flash-{{ categoria }}">
-                            {{ mensagem }}
-                        </div>
-
-                    {% endfor %}
-
-                {% endif %}
-
-            {% endwith %}
-
-            <!-- ==========================================
-                 FORMULÁRIO DE LOGIN
-            =========================================== -->
-
             <form method="POST" action="{{ url_for('login') }}">
 
-                <!-- Campo de e-mail -->
                 <div class="form-group">
 
                     <label for="email">
@@ -107,8 +38,6 @@
 
                 </div>
 
-
-                <!-- Campo de senha -->
                 <div class="form-group">
 
                     <label for="senha">
@@ -125,8 +54,6 @@
 
                 </div>
 
-
-                <!-- Botão de login -->
                 <button
                     type="submit"
                     class="auth-button">
@@ -137,14 +64,9 @@
 
             </form>
 
-
-            <!-- ==========================================
-                 LINK PARA CADASTRO
-            =========================================== -->
-
             <p class="auth-footer">
 
-                Ainda não possui uma conta?
+                Não tem uma conta?
 
                 <a href="{{ url_for('cadastro') }}">
                     Criar conta
@@ -156,6 +78,4 @@
 
     </main>
 
-</body>
-
-</html>
+{% endblock %}

@@ -1,72 +1,8 @@
-<!-- ==========================================
-     STUDYROOM - PÁGINA PRINCIPAL
-========================================== -->
+{% extends "base.html" %}
 
-<!DOCTYPE html>
+{% block title %}StudyRoom 📚{% endblock %}
 
-<!-- Define o idioma da página -->
-<html lang="pt-BR">
-
-<head>
-
-    <!-- ==========================================
-         CONFIGURAÇÕES DA PÁGINA
-    =========================================== -->
-
-    <!-- Permite caracteres especiais -->
-    <meta charset="UTF-8">
-
-    <!-- Responsividade para celulares e tablets -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Título da página -->
-    <title>StudyRoom 📚</title>
-
-
-    <!-- ==========================================
-         ARQUIVO CSS
-    =========================================== -->
-
-    <!-- Carrega o arquivo de estilos do Flask -->
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/style.css') }}">
-
-</head>
-
-<body>
-
-    <!-- ==========================================
-         CABEÇALHO
-    =========================================== -->
-
-    <header class="navbar">
-
-        <!-- Logo / nome do projeto -->
-        <div class="logo">
-            StudyRoom <span>📚</span>
-        </div>
-
-
-        <!-- ==========================================
-             MENU DE NAVEGAÇÃO
-        =========================================== -->
-
-        <nav class="menu">
-
-            <!-- Link para login -->
-            <a href="{{ url_for('login') }}" class="login-link">
-                Entrar
-            </a>
-
-            <!-- Botão para criar uma conta -->
-            <a href="{{ url_for('cadastro') }}" class="register-button">
-                Criar conta
-            </a>
-
-        </nav>
-
-    </header>
-
+{% block conteudo %}
 
     <!-- ==========================================
          CONTEÚDO PRINCIPAL
@@ -74,40 +10,26 @@
 
     <main class="hero">
 
-        <!-- ==========================================
-             TEXTO PRINCIPAL
-        =========================================== -->
-
         <section class="hero-content">
 
-            <!-- Pequeno destaque acima do título -->
             <span class="hero-label">
                 📚 Sala de estudos virtual
             </span>
 
-
-            <!-- Título principal -->
             <h1>
                 Estude junto.
                 <br>
                 <span>Não estude sozinho.</span>
             </h1>
 
-
-            <!-- Descrição do projeto -->
             <p>
                 Encontre pessoas, entre em salas de estudo
                 e mantenha o foco enquanto aprende.
             </p>
 
-
-            <!-- ==========================================
-                 BOTÃO PRINCIPAL
-            =========================================== -->
-
             <div class="hero-actions">
 
-                <a href="#" class="primary-button">
+                <a href="{{ url_for('trilhas') }}" class="primary-button">
                     Começar a estudar
                 </a>
 
@@ -117,22 +39,15 @@
 
     </main>
 
+
     <!-- ==========================================
          SEÇÃO - CRIADO POR
     =========================================== -->
 
     <section class="creator">
 
-        <!-- Foto do criador -->
         <div class="creator-image">
 
-            <!--
-                Carrega a foto localizada em:
-                static/images/foto_perfil.jpg
-
-                O url_for() permite que o Flask
-                encontre o arquivo corretamente.
-            -->
             <img
                 src="{{ url_for('static', filename='images/foto_perfil.jpg') }}"
                 alt="Foto de Wander Farias"
@@ -140,24 +55,16 @@
 
         </div>
 
-
-        <!-- ==========================================
-             INFORMAÇÕES DO CRIADOR
-        =========================================== -->
-
         <div class="creator-info">
 
-            <!-- Identificação da seção -->
             <span class="creator-label">
                 Criado e desenvolvido por
             </span>
 
-            <!-- Nome do desenvolvedor -->
             <h2>
                 Wander Farias
             </h2>
 
-            <!-- Descrição -->
             <p>
                 Desenvolvedor Python e criador do StudyRoom.
             </p>
@@ -179,6 +86,4 @@
 
     </footer>
 
-</body>
-
-</html>
+{% endblock %}

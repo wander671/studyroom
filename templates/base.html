@@ -1,0 +1,103 @@
+<!-- ==========================================
+     STUDYROOM - TEMPLATE BASE
+========================================== -->
+
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--
+        block title: cada página filha pode definir
+        seu próprio título. Se não definir, usa "StudyRoom"
+        como padrão (texto entre os marcadores)
+    -->
+    <title>{% block title %}StudyRoom{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+    <!-- ==========================================
+         MENU DE NAVEGAÇÃO
+    =========================================== -->
+
+    <nav class="navbar">
+
+        <a href="{{ url_for('home') }}" class="logo">
+            StudyRoom 📚
+        </a>
+
+        <div class="menu">
+
+            <!--
+                session.usuario_id existe? -> usuário está logado
+                Isso verifica direto no Jinja, sem precisar
+                passar uma variável extra do Python
+            -->
+            {% if session.usuario_id %}
+
+                <a href="{{ url_for('trilhas') }}" class="login-link">
+                    Trilhas
+                </a>
+
+                <a href="{{ url_for('logout') }}" class="login-link">
+                    Sair
+                </a>
+
+            {% else %}
+
+                <a href="{{ url_for('login') }}" class="login-link">
+                    Entrar
+                </a>
+
+                <a href="{{ url_for('cadastro') }}" class="register-button">
+                    Criar conta
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </nav>
+
+
+    <!-- ==========================================
+         MENSAGENS DE ERRO/SUCESSO (FLASH)
+         Centralizado aqui, então não precisa repetir
+         esse bloco em cada página filha
+    =========================================== -->
+
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+
+        {% if mensagens %}
+
+            {% for categoria, mensagem in mensagens %}
+
+                <div class="flash-mensagem flash-{{ categoria }}">
+                    {{ mensagem }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- ==========================================
+         CONTEÚDO DA PÁGINA
+         Cada página filha define o que entra aqui
+    =========================================== -->
+
+    {% block conteudo %}{% endblock %}
+
+</body>
+
+</html>

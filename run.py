@@ -84,7 +84,7 @@ def home():
 # ROTA DE LOGOUT
 # ==========================================
 @app.route("/logout")
-def logaut():
+def logout():
 
 # Remove o usuario_id da sessão
 # pop() remove o item e retorna o valor removido

@@ -1,23 +1,8 @@
-<!-- ==========================================
-     STUDYROOM - PÁGINA DA TRILHA
-========================================== -->
+{% extends "base.html" %}
 
-<!DOCTYPE html>
+{% block title %}{{ trilha[1] }} | StudyRoom{% endblock %}
 
-<html lang="pt-BR">
-
-<head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>{{ trilha[1] }} | StudyRoom</title>
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
-</head>
-
-<body>
+{% block conteudo %}
 
     <main>
 
@@ -70,6 +55,4 @@
 
     </main>
 
-</body>
-
-</html>
+{% endblock %}
