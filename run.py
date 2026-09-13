@@ -189,7 +189,7 @@ def cadastro():
         
             # Aqui sim: se deu erro, mostramos a página
             # de cadastro de novo, sem salvar nada
-            return render_template("Cadastro.html")
+            return render_template("cadastro.html")
 
 # ==========================================
 # GERA O HASH DA SENHA
@@ -235,7 +235,7 @@ def cadastro():
     # roda quando o método é GET (visita normal),
     # ou quando o POST terminou o cadastro com sucesso
     # ==========================================
-    return render_template("Cadastro.html")
+    return render_template("cadastro.html")
 
 # ==========================================
 # ROTA DE TESTE DO BANCO DE DADOS
