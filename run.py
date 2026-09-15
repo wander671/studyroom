@@ -283,7 +283,7 @@ def mapa():
             FROM topicos
             WHERE fase_id = %s
             ORDER BY ordem ASC;
-        """, (fase_id))
+        """, (fase_id,))
         topicos_db = cursor.fetchall()
 
         # Guardamos a fase com seus respectivos tópicos
