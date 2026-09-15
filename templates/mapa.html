@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h1 class="fw-bold">🗺️ Mapa de Carreira: Do Zero à Programação</h1>
+        <p class="text-muted">Siga a trilha passo a passo, estude os tópicos e evolua no seu ritmo.</p>
+    </div>
+
+    <!-- Loop para passar por cada Fase -->
+    {% for fase in fases %}
+        <div class="card shadow-sm mb-4 border-0">
+            <div class="card-header bg-primary text-white py-3">
+                <h3 class="h4 mb-0">{{ fase.titulo }}</h3>
+                <small>{{ fase.descricao }}</small>
+            </div>
+            
+            <div class="card-body bg-light">
+                <!-- Loop para passar por cada Tópico dentro da Fase -->
+                {% for topico in fase.topicos %}
+                    <div class="card mb-3 border">
+                        <div class="card-body">
+                            <h4 class="h5 text-dark fw-bold">📌 {{ topico[1] }}</h4>
+                            <p class="text-secondary">{{ topico[2] }}</p>
+
+                            <!-- Se houver código de exemplo, exibe numa caixinha estilizada -->
+                            {% if topico[3] %}
+                                <pre class="bg-dark text-light p-3 rounded"><code>{{ topico[3] }}</code></pre>
+                            {% endif %}
+                            
+                            <!-- Botão temporário para marcar como concluído -->
+                            <button class="btn btn-outline-success btn-sm mt-2">
+                                ✅ Marcar como Concluído
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

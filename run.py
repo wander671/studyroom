@@ -157,9 +157,9 @@ def login():
 
         flash(f"Bem-vindo(a), {usuario[1]}!", "sucesso")   
 
-        # Redireciona para a página de trilhas,
+        # Redireciona para a página do mapa,
         # já que o login foi bem-sucedido
-        return redirect(url_for("trilhas"))
+        return redirect(url_for("mapa"))
     return render_template("login.html")
 
 # ==========================================
@@ -255,91 +255,50 @@ def teste_banco():
         flash("Erro ao conectar ao PostgreSQL.", "erro")
         return "Erro ao conectar ao PostgreSQL.", 500
 
-
 # ==========================================
-# ROTA DE DETALHES DA TRILHA
+# ROTA DO MAPA DE CARREIRA
 # ==========================================
-@app.route("/trilha/<int:trilha_id>")
+@app.route("/mapa")
 @login_obrigatorio
-def trilha(trilha_id):
+def mapa():
 
     conexao = conectar_banco()
     cursor = conexao.cursor()
 
-    # Busca os dados da trilha
-    cursor.execute(
-        "SELECT id, titulo, descricao, nivel FROM trilhas WHERE id = %s",
-        (trilha_id,)
-    )
-    dados_trilha = cursor.fetchone()
+    # Busca todas as fases ordenadas pela coluna 'ordem'
+    cursor.execute("SELECT id, titulo, descricao FROM fases ORDER BY ordem ASC;")
+    fases_db = cursor.fetchall()
 
-    # Busca os módulos de trilha, em ordem
-    cursor.execute(
-        "SELECT id, titulo, ordem FROM modulos WHERE trilha_id = %s ORDER BY ordem",
-        (trilha_id,)
-    )
-    modulos = cursor.fetchall()
+    # Lista para estruturar as fases junto com os tópicos correspondentes
+    fases_com_topicos = []
 
-# ==========================================
-# BUSCA AS AULAS DE CADA MÓDULO
-# ==========================================
-    
-    # Vamos guadar aqui uma lista de dicionários,
-    # onde cada item representa um módulo JUNTO
-    # com suas salas
-    modulos_com_aulas = []
+    for fase in fases_db:
+        fase_id = fase[0]
+        fase_titulo = fase[1]
+        fase_descricao = fase[2]
 
-    # Percorre cada módulo da lista que ja buscamos
-    for modulo in modulos:
+        # Para cada fase, busca os tópicos cadastrados no banco
+        cursor.execute("""
+            SELECT id, titulo, conteudo, codigo_exemplo
+            FROM topicos
+            WHERE fase_id = %s
+            ORDER BY ordem ASC;
+        """, (fase_id))
+        topicos_db = cursor.fetchall()
 
-        # modulo[0] é o id do módulo específico, em ordem
-        modulo_id = modulo[0]
-
-        # Busca as aulas desse módulo específico, em ordem
-        cursor.execute(
-            "SELECT id, titulo, arquivo_pdf, ordem FROM aulas WHERE modulo_id = %s ORDER BY ordem",
-            (modulo_id,)
-        )
-        aulas = cursor.fetchall()
-
-        # Monta um dicionário juntando os dados do módulo
-        # com a lista de aulas dele
-        modulos_com_aulas.append({
-            "id": modulo[0],
-            "titulo": modulo[1],
-            "ordem":modulo[2],
-            "aulas": aulas
+        # Guardamos a fase com seus respectivos tópicos
+        fases_com_topicos.append({
+            "id": fase_id,
+            "titulo": fase_titulo,
+            "descricao": fase_descricao,
+            "topicos": topicos_db
         })
 
     cursor.close()
     conexao.close()
 
-    print(f"Trilha encontrada: {dados_trilha}")
-    print(f"Módulos com aulas: {modulos_com_aulas}")
-
-    return render_template(
-        "trilha_detalhes.html",
-        trilha=dados_trilha,
-        modulos=modulos_com_aulas
-    )
-
-# ==========================================
-# ROTA DE LISTAGEM DE TRILHAS
-# ==========================================
-@app.route("/trilhas")
-@login_obrigatorio
-def trilhas():
-
-    conexao = conectar_banco()
-    cursor = conexao.cursor()
-
-    cursor.execute("SELECT id, titulo, descricao, nivel FROM trilhas")
-    lista_trilhas = cursor.fetchall()
-
-    cursor.close()
-    conexao.close()
-
-    return render_template("trilhas_lista.html", trilhas=lista_trilhas)
+    # Renderiza o template do mapa
+    return render_template("mapa.html", fases=fases_com_topicos)
 
 
 # ==========================================
