@@ -193,76 +193,51 @@ def esqueci_senha():
 # ROTA DE CADASTRO
 # ==========================================
 
-# Define a rota "/cadastro"
 @app.route("/cadastro", methods=["GET", "POST"])
 def cadastro():
-
     # Verifica qual foi o método usado na requisição
     if request.method == "POST":
-        # request.form["nome_do_campo"] busca o valor
-        # digitado pelo usuário, usando o "name" do input
-        # como se fosse uma chave de dicionário
         nome = request.form["nome"]
         email = request.form["email"]
         senha = request.form["senha"]
         confirmar_senha = request.form["confirmar_senha"]
+        
         # ==========================================
         # VALIDAÇÃO: as senhas digitadas são iguais?
         # ==========================================
         if senha != confirmar_senha:
-            # flash() guarda uma mensagem temporária
-            # que pode ser exibida no HTML depois
             flash("As senhas não conferem. Por favor, tente novamente.", "erro")
-        
-            # Aqui sim: se deu erro, mostramos a página
-            # de cadastro de novo, sem salvar nada
             return render_template("cadastro.html")
 
-# ==========================================
-# GERA O HASH DA SENHA
-# ==========================================
-
-        # Nunca salvamos a senha em texto puro no banco.
-        # generate_password_hash transforma a senha
-        # original em um código embaralhado e seguro.
+        # GERA O HASH DA SENHA
         senha_hash = generate_password_hash(senha)
         
+        # ==========================================
+        # SALVA O USUÁRIO NO BANCO DE DADOS
+        # ==========================================
+        try:
+            conexao = conectar_banco()
+            cursor = conexao.cursor()
+            
+            cursor.execute(
+                "INSERT INTO usuarios (nome, email, senha) VALUES (%s, %s, %s)",
+                (nome, email, senha_hash)
+            )
+            conexao.commit()
+            
+            cursor.close()
+            conexao.close()
 
-        
-# ==========================================
-# SALVA O USUÁRIO NO BANCO DE DADOS
-# ==========================================
+            flash("Usuário cadastrado com sucesso! Faça login para continuar.", "sucesso")
+            return redirect(url_for("login"))
+            
+        except Exception as e:
+            print(f"Erro no cadastro: {e}")
+            flash("Este e-mail já está cadastrado ou ocorreu um erro no sistema.", "erro")
+            return render_template("cadastro.html")
 
-        # Abre uma conexão com o PostgreSQL
-        conexao = conectar_banco()
-
-        # O cursor é o "objeto" que executa comandos SQL
-        cursor = conexao.cursor()
-
-        # Executa o INSERT, usando %s como placeholders
-        # para evitar SQL Injection (nunca montar a query
-        # colando as variáveis direto na string!)
-        cursor.execute(
-            "INSERT INTO usuarios (nome, email, senha) VALUES (%s, %s, %s)",
-            (nome, email, senha_hash)
-        )
-
-        # commit() confirma a alteração no banco
-        # (sem isso, o INSERT não é salvo de verdade)
-        conexao.commit()
-
-        # Fecha o cursor e a conexão, liberando recursos
-        cursor.close()
-        conexao.close()
-
-        flash("Usuário cadastrado com sucesso! Faça login para continuar.")
-
-    # ==========================================
-    # Esse return é o "padrão":
-    # roda quando o método é GET (visita normal),
-    # ou quando o POST terminou o cadastro com sucesso
-    # ==========================================
-    return render_template("login")
+    # Retorna a página de cadastro padrão quando o método for GET
+    return render_template("cadastro.html")
 
 # ==========================================
 # ROTA DE TESTE DO BANCO DE DADOS
