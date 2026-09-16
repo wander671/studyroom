@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Recuperar Senha | StudyRoom{% endblock %}
+
+{% block conteudo %}
+
+    <main class="auth-container">
+
+        <section class="auth-card">
+
+            <div class="auth-logo">
+                StudyRoom 📚
+            </div>
+
+            <h1>
+                Recuperar Senha
+            </h1>
+
+            <p class="auth-description">
+                Informe seu e-mail e defina uma nova senha para sua conta.
+            </p>
+
+            <form method="POST" action="{{ url_for('esqueci_senha') }}">
+
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="email" placeholder="Digite seu e-mail cadastrado" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="nova_senha">Nova Senha</label>
+                    <input type="password" id="nova_senha" name="nova_senha" placeholder="Digite sua nova senha" required>
+                </div>
+
+                <button type="submit" class="auth-button">
+                    Atualizar Senha
+                </button>
+
+            </form>
+
+            <p class="auth-footer" style="margin-top: 20px; text-align: center;">
+                Lembrou a senha? 
+                <a href="{{ url_for('login') }}">Fazer login</a>
+            </p>
+
+        </section>
+
+    </main>
+
+{% endblock %}

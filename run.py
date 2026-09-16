@@ -85,18 +85,10 @@ def home():
 # ==========================================
 @app.route("/logout")
 def logout():
-
-# Remove o usuario_id da sessão
-# pop() remove o item e retorna o valor removido
-# (não vamos usar o valor aqui, só queremos remover)
-    session.pop("usuario_id", None)
-
-    # Avisa o usuário que ele saiu com sucesso
-    flash("Você saiu da sua conta.", "sucesso")
-
-    # Redireciona o usuário para a página de login
-    return redirect(url_for("login"))
-
+    # Limpa todos os dados da sessão do usuário
+    session.clear()
+    # Redireciona para a página inial pública (home)
+    return redirect(url_for("home"))
 # ==========================================
 # ROTA DE LOGIN
 # ==========================================
@@ -161,6 +153,41 @@ def login():
         # já que o login foi bem-sucedido
         return redirect(url_for("mapa"))
     return render_template("login.html")
+
+# ==========================================
+# ROTA DE RECUPERAÇÃO DE SENHA
+# ==========================================
+@app.route("/esqueci-senha", methods=["GET", "POST"])
+def esqueci_senha():
+    if request.method == "POST":
+        email = request.form["email"]
+        nova_senha = request.form["nova_senha"]
+
+        conexao = conectar_banco()
+        cursor = conexao.cursor()
+
+        # Verifica se o e-mail existe
+        cursor.execute("SELECT id FROM usuarios WHERE email = %s", (email,))
+        usuario = cursor.fetchone()
+
+        if usuario is None:
+            cursor.close()
+            conexao.close()
+            flash("E-mail não encontrado no sitema.", "erro")
+            return render_template("esqueci_senha.html")
+
+        # Atualiza a senha com o novo hash
+        novo_hash = generate_password_hash(nova_senha)
+        cursor.execute("UPDATE usuarios SET senha = %s WHERE email = %s", (novo_hash, email))
+        conexao.commit()
+
+        cursor.close()
+        conexao.close()
+
+        flash("senha alterada com sucesso! Faça login com a nova senha." "secesso")
+        return redirect(url_for("login"))
+
+    return render_template("esqueci_senha.html")
 
 # ==========================================
 # ROTA DE CADASTRO
@@ -228,14 +255,14 @@ def cadastro():
         cursor.close()
         conexao.close()
 
-        flash("Usuário cadastrado com sucesso!", "sucesso")
+        flash("Usuário cadastrado com sucesso! Faça login para continuar.")
 
     # ==========================================
     # Esse return é o "padrão":
     # roda quando o método é GET (visita normal),
     # ou quando o POST terminou o cadastro com sucesso
     # ==========================================
-    return render_template("cadastro.html")
+    return render_template("login")
 
 # ==========================================
 # ROTA DE TESTE DO BANCO DE DADOS

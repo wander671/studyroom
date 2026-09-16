@@ -1,45 +1,49 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Mapa de Carreira - StudyRoom</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h1>🚀 Seu Mapa de Carreira</h1>
-        <p>Acompanhe sua evolução e domine a programação passo a passo.</p>
+{% extends "base.html" %}
+
+{% block title %}Mapa de Carreira | StudyRoom{% endblock %}
+
+{% block conteudo %}
+
+    <main class="trilhas-container">
         
-        <hr>
+        <div class="trilha-header">
+            <span class="hero-label">🚀 Sua Jornada</span>
+            <h1>Mapa de Carreira</h1>
+            <p>Acompanhe sua evolução e domine a programação passo a passo.</p>
+        </div>
 
-        {% if fases %}
-            <div class="lista-fases">
+        <div class="modulos-container">
+            {% if fases %}
                 {% for fase in fases %}
-                    <div class="card-fase" style="margin-bottom: 30px; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
+                    <div class="modulo">
                         <h2>{{ fase.titulo }}</h2>
-                        <p><em>{{ fase.descricao }}</em></p>
+                        <p style="color: #a1a1aa; margin-bottom: 20px; font-weight: normal;"><em>{{ fase.descricao }}</em></p>
 
-                        <ul>
+                        <div style="display: flex; flex-direction: column; gap: 20px;">
                             {% for topico in fase.topicos %}
-                                <li style="margin-top: 10px;">
-                                    <strong>{{ topico[1] }}</strong> - {{ topico[2] }}
+                                <div class="aula" style="background: rgba(255, 255, 255, 0.02); padding: 16px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.05);">
+                                    <p style="color: #ffffff; font-size: 16px; margin-bottom: 8px;">{{ topico[1] }}</p>
+                                    <p style="color: #a1a1aa; font-weight: normal; font-size: 14px; margin-bottom: 12px;">{{ topico[2] }}</p>
+                                    
                                     {% if topico[3] %}
-                                        <pre style="background: #f4f4f4; padding: 10px; margin-top: 5px;"><code>{{ topico[3] }}</code></pre>
+                                        <pre><code>{{ topico[3] }}</code></pre>
                                     {% endif %}
-                                </li>
+                                </div>
                             {% else %}
-                                <p>Nenhum tópico cadastrado nesta fase ainda.</p>
+                                <p class="sem-aulas">Nenhum tópico cadastrado nesta fase ainda.</p>
                             {% endfor %}
-                        </ul>
+                        </div>
                     </div>
                 {% endfor %}
-            </div>
-        {% else %}
-            <p>Nenhuma fase encontrada no mapa no momento.</p>
-        {% endif %}
+            {% else %}
+                <p class="sem-aulas" style="text-align: center;">Nenhuma fase encontrada no mapa no momento.</p>
+            {% endif %}
+        </div>
 
-        <br>
-        <a href="/" class="btn">Voltar ao Início</a>
-    </div>
-</body>
-</html>
+        <div style="text-align: center; margin-bottom: 40px;">
+            <a href="{{ url_for('home') }}" class="primary-button">Voltar ao Início</a>
+        </div>
+
+    </main>
+
+{% endblock %}
