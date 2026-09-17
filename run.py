@@ -302,6 +302,22 @@ def mapa():
     # Renderiza o template do mapa
     return render_template("mapa.html", fases=fases_com_topicos)
 
+# ==========================================
+# ROTA TEMPORÁRIA DE DIAGNÓSTICO (FASES)
+# ==========================================
+@app.route("/debug-fases")
+def debug_fases():
+    conexao = conectar_banco()
+    cursor = conexao.cursor()
+    cursor.execute("SELECT id, ordem, titulo FROM fases ORDER BY ordem ASC;")
+    fases = cursor.fetchall()
+    cursor.close()
+    conexao.close()
+
+    # Retorna a lista de fases e seus IDs na tela
+    return {"fases_cadastradas"}
+
+
 
 # ==========================================
 # EXECUÇÃO DA APLICAÇÃO
