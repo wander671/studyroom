@@ -321,6 +321,24 @@ def debug_fases():
         # Se der erro, mostra o erro exato na tela para a gente resolver
         return {"erro_no_banco": str(e)}
 
+# ==========================================
+# ROTA TEMPORÁRIA De limpar-fases
+# ==========================================
+@app.route("/limpar-frases")
+def limpar_fases():
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.curso()
+
+        # Apaga a fase com ID 2 (a duplicada)
+        cursor.execute("DELETE FROM fases WHERE id = 2;")
+        conexao.commit()
+
+        cursor.close()
+        conexao.close()
+        return {"Sucesso": "Fase duplicada com ID 2 foi apagada com sucesso!"}
+    except Exception as e:
+        return {"erro":str(e)}
 
 
 # ==========================================
