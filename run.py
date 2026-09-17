@@ -307,15 +307,19 @@ def mapa():
 # ==========================================
 @app.route("/debug-fases")
 def debug_fases():
-    conexao = conectar_banco()
-    cursor = conexao.cursor()
-    cursor.execute("SELECT id, ordem, titulo FROM fases ORDER BY ordem ASC;")
-    fases = cursor.fetchall()
-    cursor.close()
-    conexao.close()
+    try:
+        conexao = conectar_banco()
+        cursor = conexao.cursor()
+        cursor.execute("SELECT id, ordem, titulo FROM fases ORDER BY ordem ASC;")
+        fases = cursor.fetchall()
+        cursor.close()
+        conexao.close()
 
-    # Retorna a lista de fases e seus IDs na tela
-    return {"fases_cadastradas"}
+        # Retorna a lista de fases e seus IDs na tela
+        return {"fases_cadastradas": fases}
+    except Exception as e:
+        # Se der erro, mostra o erro exato na tela para a gente resolver
+        return {"erro_no_banco": str(e)}
 
 
 
