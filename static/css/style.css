@@ -493,16 +493,17 @@ footer {
 
 .card-trilha h2 {
     font-size: 22px;
-
     letter-spacing: -0.5px;
+    word-wrap: break-word;        /* Garante que títulos longos quebrem a linha */
+    overflow-wrap: break-word;
 }
 
 .card-trilha p {
     color: #a1a1aa;
-
     font-size: 14px;
-
     line-height: 1.6;
+    word-wrap: break-word;        /* Garante que o texto não ultrapasse o card */
+    overflow-wrap: break-word;
 }
 
 
@@ -793,4 +794,39 @@ footer {
 
 .auth-footer-links a:hover {
     text-decoration: underline;
+}
+
+/* ==========================================
+   AJUSTE DE LIMITES E QUEBRA DE TEXTO NO MAPA
+========================================== */
+
+.modulo {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 30px;
+    margin-bottom: 30px;
+    max-width: 100%;       /* Impede o card de ultrapassar a tela */
+    box-sizing: border-box; /* Inclui o padding no cálculo do tamanho */
+}
+
+/* Garante que títulos e textos longos quebrem a linha certinho dentro do card */
+.modulo h2, .modulo p, .aula p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Controla os blocos de código para criarem barra de rolagem em vez de vazar */
+.modulo pre {
+    max-width: 100%;
+    overflow-x: auto;      /* Cria barra de rolagem horizontal se o código for muito comprido */
+    background: #0f172a;
+    padding: 15px;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.modulo code {
+    white-space: pre-wrap; /* Quebra as linhas do código se forem grandes demais */
+    word-break: break-all;
 }
