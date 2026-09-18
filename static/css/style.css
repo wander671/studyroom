@@ -830,3 +830,44 @@ footer {
     white-space: pre-wrap; /* Quebra as linhas do código se forem grandes demais */
     word-break: break-all;
 }
+
+/* Estilos modernos para os cartões de aulas/tópicos */
+.aula-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.aula-card:hover {
+    border-color: rgba(99, 102, 241, 0.4);
+}
+
+.aula-badge {
+    display: inline-block;
+    background: rgba(99, 102, 241, 0.15);
+    color: #818cf8;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.codigo-box {
+    background: #0d1117;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 14px;
+    margin-top: 15px;
+    overflow-x: auto;
+}
+
+.codigo-box pre {
+    margin: 0;
+    font-family: 'Courier New', Courier, monospace;
+    color: #38bdf8;
+    font-size: 14px;
+}
