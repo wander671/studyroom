@@ -28,27 +28,27 @@
                                     <!-- Descrição teórica do tópico -->
                                     <p class="aula-texto">{{ topico[2] }}</p>
                                     
-                                    <!-- IMAGEM ESPECÍFICA: TÓPICO 1 (Lógica de Programação / Fluxo) -->
+                                    <!-- IMAGEM INFOGRÁFICA: TÓPICO 1 (A Jornada da Lógica de Programação) -->
                                     {% if loop.index == 1 %}
                                         <div class="topico-imagem-container" style="margin: 16px 0; text-align: center;">
                                             <img src="https://images.unsplash.com/photo-1516116216624-53e697fedbea?auto=format&fit=crop&w=800&q=80" 
-                                                 alt="Lógica e Sequência" 
-                                                 style="width: 100%; max-height: 220px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                                            <span style="display: block; font-size: 12px; color: #a1a1aa; margin-top: 6px;">Visualizando o encadeamento de passos e algoritmos.</span>
+                                                 alt="A Jornada da Lógica de Programação" 
+                                                 style="width: 100%; max-height: 240px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                                            <span style="display: block; font-size: 12px; color: #a1a1aa; margin-top: 6px;">Infográfico: Da mente do programador à solução executável.</span>
                                         </div>
                                     {% endif %}
 
-                                    <!-- IMAGEM ESPECÍFICA: TÓPICO 2 (Variáveis e Tipos de Dados) -->
+                                    <!-- IMAGEM INFOGRÁFICA: TÓPICO 2 (Variáveis e Tipos de Dados) -->
                                     {% if loop.index == 2 %}
                                         <div class="topico-imagem-container" style="margin: 16px 0; text-align: center;">
                                             <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80" 
-                                                 alt="Variáveis e Dados na Memória" 
-                                                 style="width: 100%; max-height: 220px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                                            <span style="display: block; font-size: 12px; color: #a1a1aa; margin-top: 6px;">Representação de dados e valores armazenados em memória.</span>
+                                                 alt="Variáveis e Tipos de Dados" 
+                                                 style="width: 100%; max-height: 240px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                                            <span style="display: block; font-size: 12px; color: #a1a1aa; margin-top: 6px;">Infográfico: As caixas organizadoras de dados na memória.</span>
                                         </div>
                                     {% endif %}
 
-                                    <!-- Exemplo Prático com Código Passo a Passo -->
+                                    <!-- Exemplo Prático com Código Comentado Passo a Passo -->
                                     {% if topico[3] %}
                                         <div class="codigo-box">
                                             <span class="codigo-label">💻 Exemplo Prático (Passo a Passo)</span>
