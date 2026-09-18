@@ -25,11 +25,33 @@
                                     <div class="aula-badge">Tópico {{ loop.index }}</div>
                                     <h3>{{ topico[1] }}</h3>
                                     
+                                    <!-- Descrição padrão do tópico -->
                                     <p class="aula-texto">{{ topico[2] }}</p>
                                     
+                                    <!-- Bloco Visual Personalizado para o Tópico 1 (Exemplo com Imagem Profissional) -->
+                                    {% if loop.index == 1 %}
+                                        <div class="topico-imagem-container" style="margin: 16px 0; text-align: center;">
+                                            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80" 
+                                                 alt="Lógica de Programação" 
+                                                 style="width: 100%; max-height: 220px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                                            <span style="display: block; font-size: 12px; color: #a1a1aa; margin-top: 6px;">Representação visual de um algoritmo estruturado.</span>
+                                        </div>
+                                    {% endif %}
+
+                                    <!-- Bloco Visual Personalizado para o Tópico 2 -->
+                                    {% if loop.index == 2 %}
+                                        <div class="topico-imagem-container" style="margin: 16px 0; text-align: center;">
+                                            <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80" 
+                                                 alt="Variáveis na Memória" 
+                                                 style="width: 100%; max-height: 220px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                                            <span style="display: block; font-size: 12px; color: #a1a1aa; margin-top: 6px;">Armazenamento dinâmico de dados na memória.</span>
+                                        </div>
+                                    {% endif %}
+
+                                    <!-- Exemplo Prático de Código -->
                                     {% if topico[3] %}
                                         <div class="codigo-box">
-                                            <span class="codigo-label">Exemplo Prático</span>
+                                            <span class="codigo-label">💻 Exemplo Prático</span>
                                             <pre><code>{{ topico[3] }}</code></pre>
                                         </div>
                                     {% endif %}
