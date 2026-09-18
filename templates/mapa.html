@@ -17,16 +17,21 @@
                 {% for fase in fases %}
                     <div class="modulo">
                         <h2>{{ fase.titulo }}</h2>
-                        <p style="color: #a1a1aa; margin-bottom: 20px; font-weight: normal;"><em>{{ fase.descricao }}</em></p>
+                        <p class="fase-descricao"><em>{{ fase.descricao }}</em></p>
 
-                        <div style="display: flex; flex-direction: column; gap: 20px;">
+                        <div class="topicos-grid">
                             {% for topico in fase.topicos %}
-                                <div class="aula" style="background: rgba(255, 255, 255, 0.02); padding: 16px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.05);">
-                                    <p style="color: #ffffff; font-size: 16px; margin-bottom: 8px;">{{ topico[1] }}</p>
-                                    <p style="color: #a1a1aa; font-weight: normal; font-size: 14px; margin-bottom: 12px;">{{ topico[2] }}</p>
+                                <div class="aula-card">
+                                    <div class="aula-badge">Tópico {{ loop.index }}</div>
+                                    <h3>{{ topico[1] }}</h3>
+                                    
+                                    <p class="aula-texto">{{ topico[2] }}</p>
                                     
                                     {% if topico[3] %}
-                                        <pre><code>{{ topico[3] }}</code></pre>
+                                        <div class="codigo-box">
+                                            <span class="codigo-label">Exemplo Prático</span>
+                                            <pre><code>{{ topico[3] }}</code></pre>
+                                        </div>
                                     {% endif %}
                                 </div>
                             {% else %}
@@ -40,7 +45,7 @@
             {% endif %}
         </div>
 
-        <div style="text-align: center; margin-bottom: 40px;">
+        <div style="text-align: center; margin-bottom: 40px; margin-top: 30px;">
             <a href="{{ url_for('home') }}" class="primary-button">Voltar ao Início</a>
         </div>
 
